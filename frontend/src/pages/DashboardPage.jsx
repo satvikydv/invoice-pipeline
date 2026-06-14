@@ -2,18 +2,15 @@ import { useState, useEffect, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { listInvoices, getStats } from '../api'
 import { StatusBadge } from '../components/StatusBadge'
+import { useCurrency } from '../CurrencyContext'
 
 function fmt(dt) {
   if (!dt) return '—'
   return new Date(dt).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' })
 }
 
-function fmtAmount(v) {
-  if (v == null) return '—'
-  return `$${Number(v).toLocaleString('en-US', { minimumFractionDigits: 2 })}`
-}
-
 export default function DashboardPage() {
+  const { formatAmount } = useCurrency();
   const [invoices, setInvoices] = useState([])
   const [stats, setStats] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -170,7 +167,7 @@ export default function DashboardPage() {
                     </span>
                   </td>
                   <td>{inv.vendor_name || <span style={{ color: 'var(--text-muted)' }}>—</span>}</td>
-                  <td style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{fmtAmount(inv.total_amount)}</td>
+                  <td style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{formatAmount(inv.total_amount)}</td>
                   <td><StatusBadge status={inv.status} /></td>
                   <td>
                     {inv.confidence != null ? (

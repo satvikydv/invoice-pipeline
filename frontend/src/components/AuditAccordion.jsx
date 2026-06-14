@@ -36,7 +36,11 @@ function Field({ label, value, mono }) {
   )
 }
 
+import { useCurrency } from '../CurrencyContext'
+
 export function AuditAccordion({ invoice }) {
+  const { formatAmount } = useCurrency()
+
   if (!invoice) return null
 
   const extraction = invoice.extraction_result || {}
@@ -72,9 +76,9 @@ export function AuditAccordion({ invoice }) {
         <Field label="Invoice Date" value={fields.invoice_date} />
         <Field label="Vendor Name" value={fields.vendor_name} />
         <Field label="PO Number" value={fields.po_number} />
-        <Field label="Subtotal" value={fields.subtotal != null ? `$${fields.subtotal}` : null} />
-        <Field label="Tax" value={fields.tax != null ? `$${fields.tax}` : null} />
-        <Field label="Total Amount" value={fields.total_amount != null ? `$${fields.total_amount}` : null} />
+        <Field label="Subtotal" value={fields.subtotal != null ? formatAmount(fields.subtotal) : null} />
+        <Field label="Tax" value={fields.tax != null ? formatAmount(fields.tax) : null} />
+        <Field label="Total Amount" value={fields.total_amount != null ? formatAmount(fields.total_amount) : null} />
         <Field label="OCR Confidence" value={fields.ocr_confidence != null ? `${Math.round(fields.ocr_confidence * 100)}%` : null} />
         {extraction.error && (
           <div style={{ marginTop: '0.75rem', padding: '0.5rem', background: 'var(--status-rejected-bg)', border: '1px solid var(--status-rejected-border)', borderRadius: 'var(--radius-sm)', fontSize: '0.78rem', color: 'var(--status-rejected)' }}>
@@ -115,16 +119,16 @@ export function AuditAccordion({ invoice }) {
           <>
             <Field label="PO Number" value={poMatch.matched_po.po_number} mono />
             <Field label="Vendor" value={poMatch.matched_po.vendor_name} />
-            <Field label="PO Amount" value={`$${poMatch.matched_po.po_amount}`} />
-            <Field label="Remaining Balance" value={`$${poMatch.matched_po.remaining_balance}`} />
+            <Field label="PO Amount" value={formatAmount(poMatch.matched_po.po_amount)} />
+            <Field label="Remaining Balance" value={formatAmount(poMatch.matched_po.remaining_balance)} />
           </>
         )}
       </AccordionItem>
 
       <AccordionItem title="Amount Reconciliation" icon="💰" badge={reconBadge.text} badgeClass={reconBadge.cls}>
-        <Field label="Invoice Amount" value={recon.invoice_amount != null ? `$${recon.invoice_amount}` : null} />
-        <Field label="PO Balance" value={recon.po_balance != null ? `$${recon.po_balance}` : null} />
-        <Field label="Difference" value={recon.difference != null ? `$${recon.difference}` : null} />
+        <Field label="Invoice Amount" value={recon.invoice_amount != null ? formatAmount(recon.invoice_amount) : null} />
+        <Field label="PO Balance" value={recon.po_balance != null ? formatAmount(recon.po_balance) : null} />
+        <Field label="Difference" value={recon.difference != null ? formatAmount(recon.difference) : null} />
         <Field label="Variance %" value={recon.difference_pct != null ? `${recon.difference_pct}%` : null} />
         <Field label="Reason" value={recon.reason} />
       </AccordionItem>

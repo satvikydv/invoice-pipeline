@@ -6,6 +6,7 @@ import { ConfidenceBar } from '../components/ConfidenceBar'
 import { RiskMeter } from '../components/RiskMeter'
 import { ProcessingTimeline } from '../components/ProcessingTimeline'
 import { AuditAccordion } from '../components/AuditAccordion'
+import { useCurrency } from '../CurrencyContext'
 
 const TERMINAL = ['APPROVED', 'REVIEW_REQUIRED', 'REJECTED', 'FAILED']
 
@@ -17,17 +18,13 @@ const DECISION_ICONS = {
   FAILED: '💥',
 }
 
-function fmtAmount(v) {
-  if (v == null) return '—'
-  return `$${Number(v).toLocaleString('en-US', { minimumFractionDigits: 2 })}`
-}
-
 function fmt(dt) {
   if (!dt) return '—'
   return new Date(dt).toLocaleString('en-US', { dateStyle: 'long', timeStyle: 'medium' })
 }
 
 export default function InvoiceDetailPage() {
+  const { formatAmount } = useCurrency();
   const { jobId } = useParams()
   const [invoice, setInvoice] = useState(null)
   const [audit, setAudit] = useState(null)
@@ -189,9 +186,9 @@ export default function InvoiceDetailPage() {
                   ['Invoice Date', invoice.invoice_date],
                   ['Vendor Name', invoice.vendor_name],
                   ['PO Number', invoice.po_number, true],
-                  ['Subtotal', fmtAmount(invoice.subtotal)],
-                  ['Tax', fmtAmount(invoice.tax)],
-                  ['Total Amount', fmtAmount(invoice.total_amount)],
+                  ['Subtotal', formatAmount(invoice.subtotal)],
+                  ['Tax', formatAmount(invoice.tax)],
+                  ['Total Amount', formatAmount(invoice.total_amount)],
                   ['OCR Confidence', invoice.ocr_confidence != null ? `${Math.round(invoice.ocr_confidence * 100)}%` : null],
                 ].map(([label, val, mono]) => (
                   <div key={label} style={{ padding: '0.75rem 0', borderBottom: '1px solid var(--border)' }}>

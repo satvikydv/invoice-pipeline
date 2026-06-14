@@ -21,7 +21,12 @@ cd backend
 cp .env.example .env
 # Edit .env and add your GEMINI_API_KEY
 
-# Install dependencies (Python 3.11+)
+# Create and activate virtual environment (Python 3.11+)
+py -m venv .venv
+.venv\Scripts\activate      # Windows
+# source .venv/bin/activate  # macOS/Linux
+
+# Install dependencies
 pip install -r requirements.txt
 
 # Start the server
