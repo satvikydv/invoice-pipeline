@@ -11,11 +11,11 @@ import { useCurrency } from '../CurrencyContext'
 const TERMINAL = ['APPROVED', 'REVIEW_REQUIRED', 'REJECTED', 'FAILED']
 
 const DECISION_ICONS = {
-  APPROVED: '✅',
-  REVIEW_REQUIRED: '⚠️',
-  REJECTED: '❌',
-  PROCESSING: '⏳',
-  FAILED: '💥',
+  APPROVED: '[OK]',
+  REVIEW_REQUIRED: '[WARN]',
+  REJECTED: '[FAIL]',
+  PROCESSING: '[WAIT]',
+  FAILED: '[ERR]',
 }
 
 function fmt(dt) {
@@ -91,7 +91,7 @@ export default function InvoiceDetailPage() {
       <div className={`decision-banner ${decisionKey}`}>
         <div className="decision-text">
           <div className="decision-icon">
-            {isProcessing ? '⏳' : DECISION_ICONS[invoice.status] || '❓'}
+            {isProcessing ? '[WAIT]' : DECISION_ICONS[invoice.status] || '[?]'}
           </div>
           <div>
             <div className="decision-title">
@@ -127,9 +127,9 @@ export default function InvoiceDetailPage() {
       {/* Tabs */}
       <div style={{ display: 'flex', gap: '0.25rem', marginBottom: '1.5rem', borderBottom: '1px solid var(--border)', paddingBottom: '0' }}>
         {[
-          { key: 'overview', label: '📊 Overview' },
-          { key: 'timeline', label: '🔄 Timeline' },
-          { key: 'audit', label: '🔎 Audit Trail' },
+          { key: 'overview', label: '[OVERVIEW]' },
+          { key: 'timeline', label: '[PIPELINE]' },
+          { key: 'audit', label: '[AUDIT LOG]' },
         ].map(tab => (
           <button
             key={tab.key}
@@ -162,7 +162,7 @@ export default function InvoiceDetailPage() {
             {invoice.reasoning?.length > 0 && (
               <div className="card">
                 <div className="section-header">
-                  <div className="section-title">💡 Decision Reasoning</div>
+                  <div className="section-title">DECISION REASONING</div>
                 </div>
                 <ol className="reasoning-list">
                   {invoice.reasoning.map((r, i) => (
@@ -178,7 +178,7 @@ export default function InvoiceDetailPage() {
             {/* Invoice details */}
             <div className="card">
               <div className="section-header">
-                <div className="section-title">📄 Invoice Details</div>
+                <div className="section-title">INVOICE DETAILS</div>
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0' }}>
                 {[

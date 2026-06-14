@@ -70,7 +70,7 @@ export function AuditAccordion({ invoice }) {
 
   return (
     <div>
-      <AccordionItem title="Document Extraction" icon="🔍" badge={exBadge.text} badgeClass={exBadge.cls}>
+      <AccordionItem title="DOCUMENT EXTRACTION" icon="[EXT]" badge={exBadge.text} badgeClass={exBadge.cls}>
         <Field label="Method" value={extraction.method} />
         <Field label="Invoice Number" value={fields.invoice_number} />
         <Field label="Invoice Date" value={fields.invoice_date} />
@@ -81,24 +81,24 @@ export function AuditAccordion({ invoice }) {
         <Field label="Total Amount" value={fields.total_amount != null ? formatAmount(fields.total_amount) : null} />
         <Field label="OCR Confidence" value={fields.ocr_confidence != null ? `${Math.round(fields.ocr_confidence * 100)}%` : null} />
         {extraction.error && (
-          <div style={{ marginTop: '0.75rem', padding: '0.5rem', background: 'var(--status-rejected-bg)', border: '1px solid var(--status-rejected-border)', borderRadius: 'var(--radius-sm)', fontSize: '0.78rem', color: 'var(--status-rejected)' }}>
-            ⚠️ {extraction.error}
+          <div style={{ marginTop: '0.75rem', padding: '0.5rem', background: 'var(--status-rejected-bg)', border: '1px solid var(--status-rejected-border)', fontSize: '0.78rem', color: 'var(--status-rejected)' }}>
+            [!] {extraction.error}
           </div>
         )}
       </AccordionItem>
 
-      <AccordionItem title="Field Validation" icon="✅" badge={valBadge.text} badgeClass={valBadge.cls}>
+      <AccordionItem title="FIELD VALIDATION" icon="[VAL]" badge={valBadge.text} badgeClass={valBadge.cls}>
         {validation.required_fields && Object.entries(validation.required_fields).map(([k, v]) => (
-          <Field key={k} label={k.replace(/_/g, ' ')} value={v.present ? `✓ ${v.value}` : '✗ Missing'} />
+          <Field key={k} label={k.replace(/_/g, ' ')} value={v.present ? `[OK] ${v.value}` : '[FAIL] Missing'} />
         ))}
         {validation.failed_fields?.length > 0 && (
           <div style={{ marginTop: '0.75rem', fontSize: '0.8rem', color: 'var(--status-rejected)' }}>
-            Missing: {validation.failed_fields.join(', ')}
+            MISSING: {validation.failed_fields.join(', ')}
           </div>
         )}
       </AccordionItem>
 
-      <AccordionItem title="Vendor Verification" icon="🏢" badge={vendBadge.text} badgeClass={vendBadge.cls}>
+      <AccordionItem title="VENDOR VERIFICATION" icon="[VND]" badge={vendBadge.text} badgeClass={vendBadge.cls}>
         <Field label="Result" value={vendorCheck.result} />
         <Field label="Reason" value={vendorCheck.reason} />
         <Field label="Match Score" value={vendorCheck.match_score != null ? `${vendorCheck.match_score}%` : null} />
@@ -111,7 +111,7 @@ export function AuditAccordion({ invoice }) {
         )}
       </AccordionItem>
 
-      <AccordionItem title="PO Matching" icon="📄" badge={poBadge.text} badgeClass={poBadge.cls}>
+      <AccordionItem title="PO MATCHING" icon="[MTC]" badge={poBadge.text} badgeClass={poBadge.cls}>
         <Field label="Method" value={poMatch.method} />
         <Field label="Confidence" value={poMatch.confidence != null ? `${Math.round(poMatch.confidence * 100)}%` : null} />
         <Field label="Reason" value={poMatch.reason} />
@@ -125,7 +125,7 @@ export function AuditAccordion({ invoice }) {
         )}
       </AccordionItem>
 
-      <AccordionItem title="Amount Reconciliation" icon="💰" badge={reconBadge.text} badgeClass={reconBadge.cls}>
+      <AccordionItem title="AMOUNT RECONCILIATION" icon="[REC]" badge={reconBadge.text} badgeClass={reconBadge.cls}>
         <Field label="Invoice Amount" value={recon.invoice_amount != null ? formatAmount(recon.invoice_amount) : null} />
         <Field label="PO Balance" value={recon.po_balance != null ? formatAmount(recon.po_balance) : null} />
         <Field label="Difference" value={recon.difference != null ? formatAmount(recon.difference) : null} />
@@ -133,38 +133,38 @@ export function AuditAccordion({ invoice }) {
         <Field label="Reason" value={recon.reason} />
       </AccordionItem>
 
-      <AccordionItem title="Duplicate Detection" icon="🔁" badge={dupBadge.text} badgeClass={dupBadge.cls}>
+      <AccordionItem title="DUPLICATE SCAN" icon="[DUP]" badge={dupBadge.text} badgeClass={dupBadge.cls}>
         <Field label="Result" value={dup.result} />
         <Field label="Reason" value={dup.reason} />
         {dup.matching_records?.length > 0 && (
           <div style={{ marginTop: '0.75rem' }}>
-            <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginBottom: '0.5rem' }}>Matching records:</div>
+            <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginBottom: '0.5rem' }}>MATCHING RECORDS:</div>
             <JsonDisplay data={dup.matching_records} />
           </div>
         )}
       </AccordionItem>
 
-      <AccordionItem title="Risk Assessment" icon="⚠️">
+      <AccordionItem title="RISK ASSESSMENT" icon="[RSK]">
         <Field label="Risk Level" value={risk.level} />
         <Field label="Score" value={risk.score} />
         {risk.flags?.length > 0 && (
           <div style={{ marginTop: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
             {risk.flags.map((f, i) => (
               <div key={i} style={{ fontSize: '0.8rem', color: 'var(--status-review)', display: 'flex', gap: '0.5rem' }}>
-                <span>▸</span>{f}
+                <span>[!]</span>{f}
               </div>
             ))}
           </div>
         )}
       </AccordionItem>
 
-      <AccordionItem title="Decision Engine" icon="🧠" defaultOpen>
+      <AccordionItem title="DECISION RULES" icon="[DEC]" defaultOpen>
         <Field label="Decision" value={decision.decision} />
         <Field label="Confidence" value={decision.confidence != null ? `${Math.round(decision.confidence * 100)}%` : null} />
         {decision.reasoning?.length > 0 && (
           <div style={{ marginTop: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
             {decision.reasoning.map((r, i) => (
-              <div key={i} style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', padding: '0.35rem 0.5rem', background: 'var(--bg-base)', borderRadius: 'var(--radius-sm)' }}>{r}</div>
+              <div key={i} style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', padding: '0.35rem 0.5rem', background: 'var(--bg-base)' }}>{r}</div>
             ))}
           </div>
         )}

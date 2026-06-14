@@ -1,23 +1,20 @@
 const STEPS = [
-  { key: 'upload', label: 'Upload', desc: 'File received and job created' },
-  { key: 'extraction', label: 'Extraction', desc: 'AI reads invoice fields' },
-  { key: 'validation', label: 'Validation', desc: 'Required fields checked' },
-  { key: 'vendor', label: 'Vendor Verification', desc: 'Vendor status confirmed' },
-  { key: 'po', label: 'PO Matching', desc: 'Purchase order identified' },
-  { key: 'reconciliation', label: 'Amount Reconciliation', desc: 'Amount vs PO balance' },
-  { key: 'duplicate', label: 'Duplicate Check', desc: 'Invoice history scanned' },
-  { key: 'decision', label: 'Decision Generated', desc: 'Final result produced' },
+  { key: 'upload', label: 'JOB CREATED', desc: 'FILE INGESTED INTO PIPELINE' },
+  { key: 'extraction', label: 'EXTRACTION', desc: 'VISION MODEL PARSING FIELDS' },
+  { key: 'validation', label: 'VALIDATION', desc: 'STRUCTURAL INTEGRITY CHECK' },
+  { key: 'vendor', label: 'VENDOR VERIFY', desc: 'MERCHANT STATUS CONFIRMED' },
+  { key: 'po', label: 'PO MATCH', desc: 'PURCHASE ORDER RESOLUTION' },
+  { key: 'reconciliation', label: 'RECONCILIATION', desc: 'AMOUNT VS PO BALANCE' },
+  { key: 'duplicate', label: 'DUP SCAN', desc: 'LEDGER HISTORY CROSSED' },
+  { key: 'decision', label: 'DECISION', desc: 'FINAL RULESET EVALUATION' },
 ]
 
 function getStepState(invoice, stepKey) {
-  if (!invoice || invoice.status === 'PROCESSING') {
-    // Determine active step based on what's populated
-    if (!invoice) return 'pending'
-    if (stepKey === 'upload') return 'done'
-    return 'pending'
-  }
-  if (invoice.status === 'FAILED') return stepKey === 'upload' ? 'done' : 'error'
+  if (!invoice) return 'pending'
 
+  // If failed, only completed steps are 'done', the failed step is 'error', rest are 'pending'
+  // But we don't know exactly which step failed easily unless we check presence.
+  // Actually, we just check presence.
   const doneMap = {
     upload: true,
     extraction: !!invoice.extraction_result,
@@ -28,18 +25,26 @@ function getStepState(invoice, stepKey) {
     duplicate: !!invoice.duplicate_result,
     decision: !!invoice.decision_result,
   }
-  return doneMap[stepKey] ? 'done' : 'pending'
+
+  if (invoice.status === 'FAILED' && !doneMap[stepKey]) return 'error'
+  if (doneMap[stepKey]) return 'done'
+  
+  if (invoice.status === 'PROCESSING') {
+    // Find the first pending step and mark it active
+    const keys = STEPS.map(s => s.key)
+    const thisIndex = keys.indexOf(stepKey)
+    const prevDone = thisIndex === 0 || doneMap[keys[thisIndex - 1]]
+    if (prevDone) return 'active'
+  }
+  
+  return 'pending'
 }
 
-function stepIcon(state, key) {
-  const icons = {
-    upload: '⬆', extraction: '🔍', validation: '✓', vendor: '🏢',
-    po: '📄', reconciliation: '💰', duplicate: '🔁', decision: '🧠',
-  }
-  if (state === 'done') return '✓'
-  if (state === 'active') return '◌'
-  if (state === 'error') return '✕'
-  return icons[key] || '○'
+function stepIcon(state) {
+  if (state === 'done') return '[OK]'
+  if (state === 'active') return '[..]'
+  if (state === 'error') return '[XX]'
+  return '[  ]'
 }
 
 export function ProcessingTimeline({ invoice }) {
@@ -49,10 +54,12 @@ export function ProcessingTimeline({ invoice }) {
         const state = getStepState(invoice, step.key)
         return (
           <div key={step.key} className={`timeline-step step-${state}`}>
-            <div className={`step-dot ${state}`}>{stepIcon(state, step.key)}</div>
+            <div className={`step-dot ${state}`} style={{ fontFamily: 'var(--font-display)', fontSize: '0.8rem', fontWeight: 700 }}>
+              {stepIcon(state)}
+            </div>
             <div className="step-content">
-              <div className="step-name">{step.label}</div>
-              <div className="step-desc">{step.desc}</div>
+              <div className="step-name" style={{ fontFamily: 'var(--font-display)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{step.label}</div>
+              <div className="step-desc" style={{ textTransform: 'uppercase', fontSize: '0.75rem' }}>{step.desc}</div>
             </div>
           </div>
         )

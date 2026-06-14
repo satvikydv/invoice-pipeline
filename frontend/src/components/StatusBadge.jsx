@@ -1,15 +1,15 @@
 export function StatusBadge({ status }) {
   const map = {
-    APPROVED: { cls: 'badge-approved', icon: '✓', label: 'Approved' },
-    REVIEW_REQUIRED: { cls: 'badge-review', icon: '⚠', label: 'Review Required' },
-    REJECTED: { cls: 'badge-rejected', icon: '✕', label: 'Rejected' },
-    PROCESSING: { cls: 'badge-processing', icon: '◌', label: 'Processing' },
-    FAILED: { cls: 'badge-failed', icon: '!', label: 'Failed' },
+    APPROVED: { cls: 'badge-approved', icon: '[OK]', label: 'APPROVED' },
+    REVIEW_REQUIRED: { cls: 'badge-review', icon: '[WARN]', label: 'REVIEW REQ' },
+    REJECTED: { cls: 'badge-rejected', icon: '[FAIL]', label: 'REJECTED' },
+    PROCESSING: { cls: 'badge-processing', icon: '[WAIT]', label: 'PROCESSING' },
+    FAILED: { cls: 'badge-failed', icon: '[ERR]', label: 'FAILED' },
   }
   const cfg = map[status] || map.FAILED
   return (
     <span className={`badge ${cfg.cls}`}>
-      <span>{cfg.icon}</span>
+      <span style={{ marginRight: '0.25rem' }}>{cfg.icon}</span>
       {cfg.label}
     </span>
   )

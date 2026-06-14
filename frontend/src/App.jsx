@@ -10,14 +10,25 @@ function Navbar() {
     <nav className="navbar">
       <div className="navbar-inner">
         <NavLink to="/" className="navbar-brand">
-          <span className="brand-icon">⚡</span>
-          InvoiceIQ
+          <div className="brand-icon">Z</div>
+          ZAMP // OCR LEDGER
         </NavLink>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
           <select 
             value={currencyCode} 
             onChange={(e) => setCurrencyCode(e.target.value)}
-            style={{ padding: '0.4rem 0.6rem', background: 'rgba(255, 255, 255, 0.05)', color: 'var(--text-primary)', border: '1px solid var(--border)', borderRadius: 'var(--radius-sm)', cursor: 'pointer', outline: 'none', fontSize: '0.875rem' }}
+            style={{ 
+              padding: '0.4rem 0.6rem', 
+              background: 'var(--bg-base)', 
+              color: 'var(--text-primary)', 
+              border: '1px solid var(--border)', 
+              borderRadius: '0', 
+              cursor: 'pointer', 
+              outline: 'none', 
+              fontFamily: 'var(--font-display)',
+              fontSize: '0.8rem',
+              textTransform: 'uppercase'
+            }}
           >
             {CURRENCIES.map(c => (
               <option key={c.code} value={c.code}>{c.code} ({c.symbol})</option>
@@ -26,12 +37,12 @@ function Navbar() {
           <ul className="navbar-nav">
             <li>
               <NavLink to="/" end className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
-                Upload
+                INPUT
               </NavLink>
             </li>
             <li>
               <NavLink to="/dashboard" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
-                Dashboard
+                DATA
               </NavLink>
             </li>
           </ul>

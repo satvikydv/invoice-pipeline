@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { uploadInvoice, getInvoice } from '../api'
+import { uploadInvoice, getInvoice, getInvoiceAudit } from '../api'
 import { StatusBadge } from '../components/StatusBadge'
 import { ProcessingTimeline } from '../components/ProcessingTimeline'
 
@@ -48,7 +48,7 @@ export default function UploadPage() {
     const TERMINAL = ['APPROVED', 'REVIEW_REQUIRED', 'REJECTED', 'FAILED']
     pollRef.current = setInterval(async () => {
       try {
-        const { data } = await getInvoice(id)
+        const { data } = await getInvoiceAudit(id)
         setInvoice(data)
         if (TERMINAL.includes(data.status)) {
           clearInterval(pollRef.current)
@@ -117,17 +117,25 @@ export default function UploadPage() {
                 style={{ display: 'none' }}
                 onChange={onInputChange}
               />
-              <span className="dropzone-icon">📑</span>
+              <div className="dropzone-icon">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="square" strokeLinejoin="miter">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                  <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+              </div>
               <div className="dropzone-title">
-                {file ? file.name : 'Drop your invoice here'}
+                {file ? file.name : 'OPTICAL INPUT BED'}
               </div>
               <div className="dropzone-sub">
                 {file
-                  ? `${(file.size / 1024).toFixed(1)} KB · Click to change`
-                  : 'or click to browse your files'}
+                  ? `SIZE: ${(file.size / 1024).toFixed(1)} KB // CLICK TO EJECT`
+                  : 'DROP DOCUMENT HERE OR CLICK TO BROWSE'}
               </div>
               <div className="dropzone-formats">
-                {['PDF', 'JPG', 'PNG', 'TIFF', 'BMP', 'WebP'].map(f => (
+                {['PDF', 'JPG', 'PNG', 'TIFF'].map(f => (
                   <span key={f} className="format-chip">{f}</span>
                 ))}
               </div>
@@ -144,20 +152,19 @@ export default function UploadPage() {
 
               {isProcessing && (
                 <div style={{ marginBottom: '1.25rem' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '0.5rem' }}>
-                    <span>Processing…</span>
-                    <span className="spinner" />
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'var(--font-display)', fontSize: '0.75rem', color: 'var(--accent-primary)', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                    <span>SYSTEM PROCESSING</span>
+                    <span>...</span>
                   </div>
-                  <div style={{ height: '4px', background: 'var(--bg-surface-3)', borderRadius: '100px', overflow: 'hidden' }}>
-                    <div style={{ height: '100%', background: 'var(--accent-gradient)', borderRadius: '100px', animation: 'indeterminate 1.5s infinite ease-in-out', width: '40%' }} />
+                  <div className="laser-scan-container">
+                    <div className="laser-scan-line"></div>
                   </div>
-                  <style>{`@keyframes indeterminate { 0%{transform:translateX(-100%)} 100%{transform:translateX(350%)} }`}</style>
                 </div>
               )}
 
               {isDone && (
-                <div style={{ marginBottom: '1rem', padding: '0.875rem 1rem', background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.2)', borderRadius: 'var(--radius-sm)', fontSize: '0.875rem', color: 'var(--status-approved)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  ✓ Processing complete — redirecting to results…
+                <div style={{ marginBottom: '1rem', padding: '0.875rem 1rem', background: 'var(--status-approved-bg)', border: '1px solid var(--status-approved)', color: 'var(--status-approved)', display: 'flex', alignItems: 'center', gap: '0.5rem', fontFamily: 'var(--font-display)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  [OK] PIPELINE COMPLETE — REDIRECTING...
                 </div>
               )}
 
@@ -200,17 +207,17 @@ export default function UploadPage() {
 
       {/* Info section */}
       {!jobId && (
-        <div style={{ marginTop: '3rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem' }}>
+        <div style={{ marginTop: '4rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1px', background: 'var(--border)', border: '1px solid var(--border)' }}>
           {[
-            { icon: '🤖', title: 'AI Extraction', desc: 'Gemini Vision reads all invoice fields automatically' },
-            { icon: '🔍', title: 'Smart Matching', desc: 'Fuzzy PO matching even when references are missing' },
-            { icon: '⚡', title: 'Fast Decisions', desc: 'Full pipeline completes in under 15 seconds' },
-            { icon: '📋', title: 'Full Audit Trail', desc: 'Every stage result stored for compliance review' },
+            { icon: 'OCR', title: 'AI Extraction', desc: 'Space Grotesk driven precise parsing of invoice fields.' },
+            { icon: 'MTC', title: 'Smart Matching', desc: 'Fuzzy PO matching without manual intervention.' },
+            { icon: 'SPD', title: 'Fast Decisions', desc: 'Full pipeline completes in milliseconds.' },
+            { icon: 'ADT', title: 'Immutable Audit', desc: 'Every stage result stored for compliance review.' },
           ].map(c => (
-            <div key={c.title} className="card card-glow" style={{ textAlign: 'center', padding: '1.5rem' }}>
-              <div style={{ fontSize: '2rem', marginBottom: '0.75rem' }}>{c.icon}</div>
-              <div style={{ fontWeight: 700, marginBottom: '0.4rem' }}>{c.title}</div>
-              <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)' }}>{c.desc}</p>
+            <div key={c.title} style={{ background: 'var(--bg-base)', padding: '2rem' }}>
+              <div style={{ fontFamily: 'var(--font-display)', fontSize: '0.85rem', color: 'var(--accent-primary)', marginBottom: '1rem', fontWeight: 600 }}>[{c.icon}]</div>
+              <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, marginBottom: '0.4rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{c.title}</div>
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>{c.desc}</p>
             </div>
           ))}
         </div>

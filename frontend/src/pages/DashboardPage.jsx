@@ -73,11 +73,11 @@ export default function DashboardPage() {
       <div className="page-hero">
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
           <div>
-            <h1 className="page-hero-title">Dashboard</h1>
-            <p className="page-hero-sub">Monitor invoice processing activity and audit decisions</p>
+            <h1 className="page-hero-title">DATA LEDGER</h1>
+            <p className="page-hero-sub" style={{ fontFamily: 'var(--font-display)', textTransform: 'uppercase', fontSize: '0.85rem', letterSpacing: '0.05em' }}>SYSTEM MONITOR // INVOICE PROCESSING ACTIVITY</p>
           </div>
           <Link to="/" className="btn btn-primary" id="dashboard-upload-btn">
-            <span>+</span> Upload Invoice
+            [+] INPUT NEW DOCUMENT
           </Link>
         </div>
       </div>
@@ -104,31 +104,31 @@ export default function DashboardPage() {
 
       {/* Filters */}
       <div style={{ display: 'flex', gap: '0.75rem', marginBottom: '1.25rem', flexWrap: 'wrap', alignItems: 'center' }}>
-        <div className="search-wrap" style={{ flex: 1, minWidth: '200px' }}>
-          <span className="search-icon">🔍</span>
+        <div style={{ flex: 1, minWidth: '200px', position: 'relative' }}>
+          <span style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', fontFamily: 'var(--font-display)', fontSize: '0.8rem', color: 'var(--text-muted)' }}>[Q]</span>
           <input
             id="dashboard-search"
-            className="search-input"
+            style={{ width: '100%', padding: '0.6rem 1rem 0.6rem 2.5rem', background: 'var(--bg-surface)', border: '1px solid var(--border)', color: 'var(--text-primary)', fontFamily: 'var(--font-display)', fontSize: '0.8rem', textTransform: 'uppercase', outline: 'none' }}
             type="text"
-            placeholder="Search by invoice #, vendor, or filename…"
+            placeholder="QUERY BY INVOICE #, VENDOR, OR ID..."
             value={search}
             onChange={e => setSearch(e.target.value)}
           />
         </div>
         <select
           id="dashboard-status-filter"
-          className="filter-select"
+          style={{ padding: '0.6rem 1rem', background: 'var(--bg-surface)', border: '1px solid var(--border)', color: 'var(--text-primary)', fontFamily: 'var(--font-display)', fontSize: '0.8rem', textTransform: 'uppercase', outline: 'none', cursor: 'pointer' }}
           value={statusFilter}
           onChange={e => setStatusFilter(e.target.value)}
         >
-          <option value="">All Statuses</option>
-          <option value="APPROVED">Approved</option>
-          <option value="REVIEW_REQUIRED">Review Required</option>
-          <option value="REJECTED">Rejected</option>
-          <option value="PROCESSING">Processing</option>
+          <option value="">ALL STATUSES</option>
+          <option value="APPROVED">APPROVED</option>
+          <option value="REVIEW_REQUIRED">REVIEW REQUIRED</option>
+          <option value="REJECTED">REJECTED</option>
+          <option value="PROCESSING">PROCESSING</option>
         </select>
         <button id="dashboard-refresh-btn" className="btn btn-ghost" onClick={load}>
-          ↻ Refresh
+          [↻] SYNC
         </button>
       </div>
 
@@ -185,8 +185,8 @@ export default function DashboardPage() {
                   </td>
                   <td style={{ whiteSpace: 'nowrap', fontSize: '0.8rem' }}>{fmt(inv.created_at)}</td>
                   <td>
-                    <Link to={`/invoice/${inv.job_id}`} className="btn btn-ghost" style={{ padding: '0.35rem 0.75rem', fontSize: '0.8rem' }}>
-                      View →
+                    <Link to={`/invoice/${inv.job_id}`} className="btn btn-ghost" style={{ padding: '0.35rem 0.75rem', fontSize: '0.75rem', fontFamily: 'var(--font-display)', letterSpacing: '0.05em' }}>
+                      [VIEW RECORD]
                     </Link>
                   </td>
                 </tr>
