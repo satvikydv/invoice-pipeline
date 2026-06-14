@@ -19,3 +19,6 @@ export const getInvoice = (jobId) => api.get(`/invoices/${jobId}`)
 export const getInvoiceAudit = (jobId) => api.get(`/invoices/${jobId}/audit`)
 export const listInvoices = (params) => api.get('/invoices', { params })
 export const getStats = () => api.get('/invoices/stats')
+
+export const getVendors = () => api.get('/system/vendors')
+export const getPos = () => api.get('/system/pos')

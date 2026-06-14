@@ -232,7 +232,7 @@ export default function InvoiceDetailPage() {
       {activeTab === 'timeline' && (
         <div style={{ maxWidth: '480px' }}>
           <div className="card">
-            <ProcessingTimeline invoice={invoice} />
+            <ProcessingTimeline invoice={audit || invoice} />
           </div>
         </div>
       )}

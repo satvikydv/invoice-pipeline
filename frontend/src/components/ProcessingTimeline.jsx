@@ -26,14 +26,18 @@ function getStepState(invoice, stepKey) {
     decision: !!invoice.decision_result,
   }
 
-  if (invoice.status === 'FAILED' && !doneMap[stepKey]) return 'error'
   if (doneMap[stepKey]) return 'done'
+
+  const keys = STEPS.map(s => s.key)
+  const thisIndex = keys.indexOf(stepKey)
+  const prevDone = thisIndex === 0 || doneMap[keys[thisIndex - 1]]
+
+  if (invoice.status === 'FAILED') {
+    if (prevDone) return 'error'
+    return 'pending'
+  }
   
   if (invoice.status === 'PROCESSING') {
-    // Find the first pending step and mark it active
-    const keys = STEPS.map(s => s.key)
-    const thisIndex = keys.indexOf(stepKey)
-    const prevDone = thisIndex === 0 || doneMap[keys[thisIndex - 1]]
     if (prevDone) return 'active'
   }
   

@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, NavLink } from 'react-router-dom'
 import UploadPage from './pages/UploadPage'
 import DashboardPage from './pages/DashboardPage'
 import InvoiceDetailPage from './pages/InvoiceDetailPage'
+import DataPage from './pages/DataPage'
 import { CurrencyProvider, useCurrency, CURRENCIES } from './CurrencyContext'
 
 function Navbar() {
@@ -45,6 +46,11 @@ function Navbar() {
                 DATA
               </NavLink>
             </li>
+            <li>
+              <NavLink to="/master-data" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
+                SYSTEM
+              </NavLink>
+            </li>
           </ul>
         </div>
       </div>
@@ -63,6 +69,7 @@ export default function App() {
               <Routes>
                 <Route path="/" element={<UploadPage />} />
                 <Route path="/dashboard" element={<DashboardPage />} />
+                <Route path="/master-data" element={<DataPage />} />
                 <Route path="/invoice/:jobId" element={<InvoiceDetailPage />} />
               </Routes>
             </div>

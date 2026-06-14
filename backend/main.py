@@ -11,6 +11,7 @@ load_dotenv()
 from database import engine, Base
 from models import Invoice, POData, VendorMaster, InvoiceHistory
 from routers.invoices import router as invoices_router
+from routers.system import router as system_router
 from seed_data import seed_database
 
 FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
@@ -47,6 +48,7 @@ app.mount("/uploads", StaticFiles(directory=str(UPLOAD_DIR)), name="uploads")
 
 # Routers
 app.include_router(invoices_router)
+app.include_router(system_router)
 
 
 @app.get("/health")

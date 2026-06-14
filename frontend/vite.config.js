@@ -8,6 +8,7 @@ export default defineConfig({
       '/invoices': 'http://localhost:8000',
       '/health': 'http://localhost:8000',
       '/uploads': 'http://localhost:8000',
+      '/system': 'http://localhost:8000',
     }
   }
 })
