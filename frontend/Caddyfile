@@ -1,0 +1,12 @@
+zamp-invoice.duckdns.org {
+    # Serve the React built static files
+    root * /srv
+    encode gzip
+    
+    # Try static files first, then fallback to index.html (SPA routing)
+    try_files {path} {path}/ /index.html
+    file_server
+
+    # Proxy /api requests to the backend container
+    reverse_proxy /api/* http://backend:8000
+}
