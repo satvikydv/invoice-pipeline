@@ -61,7 +61,7 @@ def _get_mime_type(file_path: str) -> str:
 
 def _extract_with_gemini(file_path: str) -> dict:
     """Use Gemini Vision to extract invoice data."""
-    model = genai.GenerativeModel("gemini-1.5-flash")
+    model = genai.GenerativeModel("gemini-2.5-flash")
     file_data = _encode_file_to_base64(file_path)
     mime_type = _get_mime_type(file_path)
 

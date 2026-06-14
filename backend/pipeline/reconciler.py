@@ -39,17 +39,19 @@ def run(context: dict) -> dict:
 
     po_balance = matched_po.get("remaining_balance", 0)
     difference = total_amount - po_balance
-    difference_pct = (abs(difference) / max(po_balance, 0.01)) * 100
 
-    if difference_pct == 0:
+    if difference <= 0:
         status = "PASS"
-        reason = "Invoice amount exactly matches PO remaining balance"
-    elif difference_pct <= TOLERANCE_PERCENT:
-        status = "PASS"
-        reason = f"Invoice amount within {TOLERANCE_PERCENT}% tolerance (variance: {difference_pct:.2f}%)"
+        reason = "Invoice amount is fully covered by PO remaining balance"
+        difference_pct = 0.0
     else:
-        status = "REVIEW"
-        reason = f"Invoice amount exceeds tolerance: variance is {difference_pct:.2f}% (limit: {TOLERANCE_PERCENT}%)"
+        difference_pct = (difference / max(po_balance, 0.01)) * 100
+        if difference_pct <= TOLERANCE_PERCENT:
+            status = "PASS"
+            reason = f"Invoice amount exceeds balance but is within {TOLERANCE_PERCENT}% tolerance (variance: +{difference_pct:.2f}%)"
+        else:
+            status = "REVIEW"
+            reason = f"Invoice amount exceeds PO balance by {difference_pct:.2f}% (limit: {TOLERANCE_PERCENT}%)"
 
     context["reconciliation"] = {
         "status": status,

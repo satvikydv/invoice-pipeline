@@ -14,7 +14,7 @@ VENDOR_DATA = [
 
 PO_DATA = [
     {"po_number": "PO-2024-001", "vendor_name": "Acme Corp", "po_amount": 5000.00, "remaining_balance": 5000.00, "status": "Active"},
-    {"po_number": "PO-2024-002", "vendor_name": "GlobalTech Solutions", "po_amount": 12000.00, "remaining_balance": 8500.00, "status": "Active"},
+    {"po_number": "PO-2024-002", "vendor_name": "GlobalTech Solutions", "po_amount": 12000.00, "remaining_balance": 9500.00, "status": "Active"},
     {"po_number": "PO-2024-003", "vendor_name": "OfficeSupply Pro", "po_amount": 2500.00, "remaining_balance": 2500.00, "status": "Active"},
     {"po_number": "PO-2024-004", "vendor_name": "CloudHost Inc", "po_amount": 9000.00, "remaining_balance": 3200.00, "status": "Active"},
     {"po_number": "PO-2024-005", "vendor_name": "DataVault Systems", "po_amount": 15000.00, "remaining_balance": 15000.00, "status": "Active"},
