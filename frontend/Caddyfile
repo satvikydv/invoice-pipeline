@@ -7,6 +7,8 @@ zamp-invoice.duckdns.org {
     try_files {path} {path}/ /index.html
     file_server
 
-    # Proxy /api requests to the backend container
-    reverse_proxy /api/* http://backend:8000
+    # Strip /api prefix and proxy to the backend container
+    handle_path /api/* {
+        reverse_proxy http://backend:8000
+    }
 }
