@@ -1,20 +1,34 @@
-version: '3.9'
+version: '3.8'
 
 services:
   backend:
-    build: ./backend
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: zamp_backend
+    restart: always
     ports:
       - "8000:8000"
     environment:
       - GEMINI_API_KEY=${GEMINI_API_KEY}
-      - DATABASE_URL=sqlite:///./invoices.db
-      - UPLOAD_DIR=uploads
-      - FRONTEND_URL=${FRONTEND_URL:-http://localhost:5173}
+      - FRONTEND_URL=http://localhost  # Or your EC2 public IP/domain
     volumes:
-      - backend_data:/app/invoices.db
-      - backend_uploads:/app/uploads
-    restart: unless-stopped
+      - backend_data:/app/uploads
+      - db_data:/app  # To persist the SQLite DB (invoices.db)
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: /api
+    container_name: zamp_frontend
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
 
 volumes:
   backend_data:
-  backend_uploads:
+  db_data:
